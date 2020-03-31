@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shopping Cart</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+</head>
+
+<body>
+
+    <section>
+        <div class="container">
+            <div class="cart">
+                <div class="col-md-12 col-lg-10 mx-auto">
+                    <div id="cart1" class="cart-item">
+                        <div class="row">
+                            <div class="col-md-7 center-item">
+                                <img src="images/product-1.png" alt="">
+                                <h5>iPhone 11 128GB Black</h5>
+                            </div>
+                            <div class="col-md-5 center-item">
+                                <div class="input-group number-spinner">
+                                    <button id="minus1" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                                    <input id="value1" type="text" class="form-control text-center" value="1">
+                                    <button id="plus1" class="btn btn-default"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <h5>$<span id="price1">1219</span> </h5>
+                                <img id="remove1" src="images/remove.png" alt="" class="remove-item">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cart2" class="cart-item">
+                        <div class="row">
+                            <div class="col-md-7 center-item mx-auto">
+                                <img src="images/product-2.png" alt="">
+                                <h5>iPhone 11 Silicone Case - Black</h5>
+                            </div>
+                            <div class="col-md-5 center-item">
+                                <div class="input-group number-spinner">
+                                    <button id="minus2" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                                    <input id="value2" type="text" class="form-control text-center" value="1">
+                                    <button id="plus2" class="btn btn-default"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <h5>$<span id="price2">59</span></h5>
+                                <img id="remove2" src="images/remove.png" alt="" class="remove-item">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="row">
+
+                            <div class="col-md-8">
+                                <h5>Subtotal: </h5>
+                                <h5>Tax:</h5>
+                                <h5>Total:</h5>
+                            </div>
+
+                            <div class="col-md-4 status">
+                                <h5>$<span id="subTotal">1,278</span></h5>
+                                <h5>$<span id="tax">127</span></h5>
+                                <h5>$<span id="total">1,278</span></h5>
+                            </div>
+                        </div </div>
+                        <div class="col-md-12 pt-4 pb-4">
+                            <button onclick="popUp()" id="checkOut" type="button" class="btn btn-success check-out">Check Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <script>
+        //-------------- Cart Remove ---------------
+        function cartRemove(remove, cartItem) {
+            const removeBtn = document.getElementById(remove);
+            removeBtn.addEventListener("click", function() {
+                const cart = document.getElementById(cartItem);
+                cart.style.display = "none";
+            });
+        }
+
+        cartRemove("remove1", "cart1");
+        cartRemove("remove2", "cart2");
+
+        //-------------- Increase Or Decrease All ---------------
+        function quantity(signId, valueId) {
+            const sign = document.getElementById(signId);
+            sign.addEventListener("click", function() {
+                const value = document.getElementById(valueId).value;
+                const valueNumber = parseFloat(value);
+
+                if (signId == "plus1") {
+                    const currentPrice = 1219;
+                    quantityUpDown(valueId, valueNumber, 1);
+                    price("price1", currentPrice);
+                } else if (signId == "plus2") {
+                    const currentPrice = 59;
+                    quantityUpDown(valueId, valueNumber, 1);
+                    price("price2", currentPrice);
+                } else if (signId == "minus1") {
+                    const currentPrice = -1219;
+                    quantityUpDown(valueId, valueNumber, -1);
+                    price("price1", currentPrice);
+                } else if (signId == "minus2") {
+                    const currentPrice = -59;
+                    quantityUpDown(valueId, valueNumber, -1);
+                    price("price2", currentPrice);
+                }
+                subTotal("price1", "price2");
+            });
+        }
+        //-------------- Increase Or Decrease Quantity Number ---------------
+        function quantityUpDown(valueId, valueNumber, num) {
+            const increase = valueNumber + num;
+            document.getElementById(valueId).value = increase;
+        }
+
+        //-------------- Increase Or Decrease Current Price ---------------
+        function price(piceId, currentPrice) {
+            const price = document.getElementById(piceId).innerText;
+            const priceNumber = parseFloat(price);
+            const catPrice = priceNumber + currentPrice;
+            document.getElementById(piceId).innerText = catPrice;
+        }
+
+        //-------------- Subtotal Price ---------------
+        function subTotal(priceId1, priceId2) {
+            const price1 = document.getElementById(priceId1).innerText;
+            const priceNumber1 = parseFloat(price1);
+            const price2 = document.getElementById(priceId2).innerText;
+            const priceNumber2 = parseFloat(price2);
+            const totalSub = priceNumber1 + priceNumber2;
+            document.getElementById("subTotal").innerText = totalSub;
+            tax(totalSub);
+        }
+
+        //-------------- Tax count ---------------
+        function tax(totalSub) {
+            const tax = parseInt(totalSub * 0.10);
+            document.getElementById("tax").innerText = tax;
+            total(totalSub, tax)
+        }
+
+        //-------------- Total count ---------------
+        function total(totalSub, tax) {
+            document.getElementById("total").innerText = totalSub + tax;
+        }
+
+        quantity("plus1", "value1");
+        quantity("minus1", "value1");
+        quantity("plus2", "value2");
+        quantity("minus2", "value2");
+
+        function popUp() {
+            swal("Check Out Complete!", "Thank You", "success")
+        }
+    </script>
+
+</body>
+
+</html>
